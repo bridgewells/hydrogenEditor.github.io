@@ -9,6 +9,29 @@
 	pointer-events: none;
 }
 
+#downloadBTN{
+	color: white;
+	background-color: deepskyblue;
+	padding:15px;
+	border-radius: 5px;
+	font-size: 24px;
+	border: none;
+	width: 200px;
+	margin-top: 6%;
+	transition: all .12s;
+}
+
+#downloadBTN:hover{
+	cursor: pointer !important;
+	box-shadow: 0px 0px 120px gray;
+	transform: perspective(500px) translate3d(0px,0px,50px);
+	transition: all .5s;
+}
+
+.dl{
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
 
 body{
 	background: white;
@@ -164,6 +187,8 @@ section.c{
 	padding: 15px;
 	font-family: 'Raleway';
 	margin-top: -150px;
+	/*margin-bottom: -150px;*/
+	padding-top: 20px;
 }
 
 hr{
@@ -197,6 +222,10 @@ section h1{
 	text-align: center;
 	vertical-align: top;
 	color: black;
+}
+
+.wid50 img{
+	width: 100%;
 }
 
 @media screen and (max-width: 700px) {
@@ -268,8 +297,12 @@ section h1{
 	margin-right: 10%;
 }
 
+img.mini{
+	width: 20%;
+}
+
 section{
-	margin-top: 150px;
+	margin-top: -150px;
 	margin-bottom: 150px;
 	background: white;
 	padding: 50px;
