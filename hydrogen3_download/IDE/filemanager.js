@@ -3,8 +3,11 @@
 var workingFolder = "";
 var rootFolder = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE);
 var wsFolder = "/Documents/hydrogen3/projects";
+var piFolder = "/Documents/hydrogen3/plugins";
 
 var fs = require('fs');
+
+makeRootFolders();
 
 function setCurrentWS(name){
 	workingFolder = name;
@@ -21,14 +24,23 @@ function setCurrentWS(name){
 	},500);
 	win.title="hydrogen - "+name;
 	document.title = "hydrogen - "+name;
+	eventManager.triggerEvent('readyForPlugin');
+}
+
+function makeRootFolders(){
+	var folders = [rootFolder+"/Documents/hydrogen3", rootFolder+wsFolder, rootFolder+piFolder];
+	for (var i = 0; i < folders.length; i++) {
+		try{ 
+			fs.mkdirSync(folders[i]); 
+		}catch(s){
+			console.error(s);
+		}
+	}
 }
 
 function createProject(name){
 	workingFolder = name;
-	try{ 
-		fs.mkdirSync(rootFolder+"/Documents/hydrogen3"); 
-		fs.mkdirSync(rootFolder+wsFolder);
-	}catch(s){}
+	makeRootFolders();
 	try{
 		setupDirectory();
 	}
@@ -48,15 +60,15 @@ function createProject(name){
 	},1000);
 	win.title="hydrogen - "+name;
 	document.title = "hydrogen - "+name;
+	eventManager.triggerEvent('readyForPlugin');
 }
 
 function setupDirectory(){
 	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder);
 	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components");
-	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments");
+	// fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments");
 	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets");
 	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"index.html", 'w'));
-	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"creator.js", 'w'));
 	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets/style.css", 'w'));
 }
 
@@ -199,15 +211,25 @@ function buildPathFromTree(data){
 	}
 }
 
+function generateUKey(){
+	return Math.random().toString(36).substr(2, 17);
+}
+
+// new interface('web-component',{
+// 	id:'nav',
+// 	styles:['navStyle.css'],
+// 	scripts['myActions.js']	,
+// 	order:'async'
+// });
+
 function createWSItem(name,ftype,withStuff) {
 	console.log("Creating "+ ftype + " named " + name);
 	changeStatus("Created "+ ftype + " named " + name, 4);
 	if (ftype == "Components"){
-		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".js", 'w'));
 		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".cdml", 'w'));
-		var c = "\nclass "+name+" extends componentInterface{\n\tconstructor(){\n\t\tsuper('i_"+name+"')\n\t}\n}";
-		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".js",c);	
-		var c2 = "<component id='i_"+name+"'>\n\t\n</component>";
+		var c = "\n\nnew ComponentInterface('web-component',{\n\tname:'"+name+"',\n\tstyles:[],\n\tscripts:[],\n\torder:'defer'\n});";
+		fs.appendFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/interfaces.js",c);	
+		var c2 = "<"+name+" id='REPLACE_ME'>\n\t\n</"+name+">";
 		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".cdml",c2);	
 	}
 	else if (ftype == "Segment"){

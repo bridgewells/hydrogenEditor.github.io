@@ -854,13 +854,13 @@ font-size: 1vw;
 
 .blankPanel{
 	background:white;
-	box-shadow: 0 0 50px gray;
+	box-shadow: 0 0 200px gray;
 	width: 50%;
-	height: 50%;
+	height: 64%;
 	position: fixed;
 	z-index: 9999;
 	text-align: center;
-	top: 25%;
+	top: 18%;
 	left: 25%;
 }
 
@@ -936,6 +936,7 @@ font-size: 1vw;
 }
 
 .blankPanel>.controlSpace:hover{
+	text-decoration: none;
 	background-color:lightgrey;
 	border-radius: 4px;
 	cursor: hand;

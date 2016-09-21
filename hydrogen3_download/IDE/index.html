@@ -1,19 +1,21 @@
 <html>
 	<head>
 		<title>hydrogen</title>
-		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300|Roboto:100" rel="stylesheet">
-		<script src="core.js"></script>
-		<script src="filemanager.js"></script>
-
 		<!-- Required Stylesheets -->
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300|Roboto:100" rel="stylesheet">
 		<link href="dependencies/css/bootstrap.css" rel="stylesheet">
 		<link href="dependencies/css/core.css" rel="stylesheet">
 		<link href="dependencies/css/Material_Icons.css" rel="stylesheet">
 
 		<!-- Required Javascript -->
 		<script src="dependencies/js/jquery.js"></script>
-		<script src="viewManager.js"></script>
-		<script src="dependencies/js/bootstrap-treeview.js"></script>
+		<script src="eventManager.js"></script>
+		<script src="pluginManager.js"></script>
+		<script src="buildManager.js"></script>
+		<script src="core.js" defer></script>
+		<script src="filemanager.js" defer></script>
+		<script src="viewManager.js" defer></script>
+		<script src="dependencies/js/bootstrap-treeview.js" defer></script>
 	</head>
 	<body class="" style=" background:url(random.jpg); background-repeat: no-repeat; background-size: cover;">
 		<div class="start-page-base">
@@ -41,6 +43,8 @@
 		</div>
 
 		<script>
+
+			eventManager.triggerEvent('startUpComplete');
 
 			function selectionSort(arr,arr2) {
 				let i,m,j;
@@ -84,6 +88,7 @@
 				catch (e) {
 				}				
 			}
+
 		</script>
 	
 	</body>
