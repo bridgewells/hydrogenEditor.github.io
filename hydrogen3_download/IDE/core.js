@@ -4,6 +4,8 @@ var gui = require('nw.gui');
 var ismax = false;
 var win = gui.Window.get();
 var nextMove = "";
+var statusBarColor = "white";
+var statusBarBackground = "deepskyblue";
 
 let UI = {
 	editor:{
@@ -67,16 +69,32 @@ function changeStatus(newstat,sec){
 	sec = (sec || 2);
 	changeStatusAnimated(newstat);
 	setTimeout(function(){
-		changeStatusAnimated("");
+		hideStatus();
 	},sec*1000)
 }
 
-function changeStatusAnimated(newstat){
-	$('#bottomBar').css({
-		color:"whitesmoke"
-	});
-	setTimeout(function(){ $('#bottomBar').text(newstat) }, 600);
-	setTimeout(function(){ $('#bottomBar').css({color:"deepskyblue"}) },1500);
+function changeStatusNegative(newstat,sec){
+	sec = (sec || 2);
+	changeStatusAnimated(newstat,"bad");
+	setTimeout(function(){
+		hideStatus();
+	},sec*1000)
+}
+
+function changeStatusAnimated(newstat,dir){
+	$('#bottomBar').css({color:"deepskyblue",background:'deepskyblue'});
+	$('#bottomBar').html("<strong>"+newstat+"</strong>");
+	if (dir != "bad") {
+		$('#bottomBar').css({	color:"white",background:'#00C853' });
+	}
+	else{
+		$('#bottomBar').css({	color:"white",background:'#ff1744' });
+	}
+}
+
+function hideStatus(){
+	$('#bottomBar').css({color:"deepskyblue",background:"deepskyblue"});
+	$('#bottomBar').html("");
 }
 
 function hideSearchResults(){
@@ -124,7 +142,7 @@ function countInstances(string, word) {
 
 		$('.cmdhover').mouseover(function(){
 			$('#bottomBar').empty();
-			$('#bottomBar').append( $('<span style="position: absolute;width: 59.8%;color: white;left: 20.2%;">'+$(this).data('label')+'</span>') );
+			$('#bottomBar').append( $('<span style="text-align:right;position: absolute;width: 59.8%;color: white;right: 20.2%;">'+$(this).data('label')+'</span>') );
 		});
 
 		$('.cmdhover').mouseleave(function(){
@@ -142,6 +160,9 @@ function countInstances(string, word) {
 		$(document.body).on('click','#cmd_save',function(){
 			saveEditorContent();
 		});
+		$(document.body).on('click','#cmd_build',function(){
+			buildManager.buildCurrent();
+		});
 		$(document.body).on('click','#cmd_projsel',function(){
 			saveEditorContent();
 			location = 'index.html';
@@ -152,7 +173,7 @@ function countInstances(string, word) {
 		$(document.body).on('click','#cmd_delete',function(){
 			var curpath = buildPathFromTree( $('#tree').treeview('getSelected')[0] ).direct;
 			if (curpath != undefined) require('fs').unlinkSync(curpath);
-			changeStatus('Deleted '+curpath+'!');
+			changeStatus('Deleted '+curpath+'!',1);
 			var struct = dirTree(rootFolder + wsFolder + "/" + workingFolder);
 			var treeX = genTreeJSON(struct);
 			$('#tree').treeview({data:treeX});
@@ -162,7 +183,9 @@ function countInstances(string, word) {
 			setupTree();
 		});
 		$(document.body).on('click','#cmd_run',function(){
-			if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) views.create.preview.location( "file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ workingFolder).slice(0, -1) );
+			if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
+				if (buildManager.buildCurrent() == true) views.create.preview.location( "file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1) );
+			}
 			$('ul.breadcrumb>li').text(function (_,txt) {
     				return txt.slice(0, -1);
 			});
@@ -234,10 +257,11 @@ function max_h(){
 
 function saveEditorContent(){
 	if (currentlyLoadedPath == ""){
-		changeStatus("Unable to save. Select file first",3);
+		changeStatusNegative("UNABLE TO SAVE. Select file first",3);
 	}
 	else{
 		fs.writeFileSync( currentlyLoadedPath , editor.getSession().getValue() );	
+		changeStatus("SAVED!",1);
 	}
 }
 

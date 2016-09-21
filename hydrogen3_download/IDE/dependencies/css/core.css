@@ -684,7 +684,7 @@ font-size: 1vw;
 	z-index: 99;
 	padding: 3px;
     	padding-left: 8px;
-    	transition: color .6s;
+    	transition: color .3s, background .6s;
 }
 
 

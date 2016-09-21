@@ -33,7 +33,7 @@ function makeRootFolders(){
 		try{ 
 			fs.mkdirSync(folders[i]); 
 		}catch(s){
-			console.error(s);
+// 			console.error(s);
 		}
 	}
 }
@@ -224,10 +224,10 @@ function generateUKey(){
 
 function createWSItem(name,ftype,withStuff) {
 	console.log("Creating "+ ftype + " named " + name);
-	changeStatus("Created "+ ftype + " named " + name, 4);
+	changeStatus("Created "+ ftype + " named " + name, 3);
 	if (ftype == "Components"){
 		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".cdml", 'w'));
-		var c = "\n\nnew ComponentInterface('web-component',{\n\tname:'"+name+"',\n\tstyles:[],\n\tscripts:[],\n\torder:'defer'\n});";
+		var c = "\n\nnew ComponentInterface('web-component',{\n\tname:'"+name+".cdml',\n\tstyles:[],\n\tscripts:[],\n\torder:'defer'\n});";
 		fs.appendFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/interfaces.js",c);	
 		var c2 = "<"+name+" id='REPLACE_ME'>\n\t\n</"+name+">";
 		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".cdml",c2);	

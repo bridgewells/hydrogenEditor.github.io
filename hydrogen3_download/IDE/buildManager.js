@@ -5,24 +5,50 @@ var finalFolder = "release"
 let buildManager = {
 	components:[],
 	files:{},
+	buildTemp:function(){
+		//use scripts and styles for testing
+	},
 	buildCurrent:function(){
 		buildManager.components = [];
 		try{ fs.mkdirSync(rootFolder + wsFolder + "/" + finalFolder); }
 		catch(e){}
 
 		try{ copyFolderRecursiveSync(rootFolder + wsFolder + "/" + workingFolder, rootFolder + wsFolder + "/" + finalFolder);
-		}catch(bf){ return false; }
+		}catch(bf){ changeStatusNegative('BUILD FAILED!!',5) ;return false; }
 
 		evalInContext( fs.readFileSync(rootFolder + wsFolder + "/" + workingFolder + "/Components/interfaces.js") +"console.log(this)", this);
 		deleteFolderRecursive(rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/Components"); 
+		buildManager.files['html'] = [];
+		buildManager.files['cdml'] = [];
 
 		var files = fs.readdirSync(rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder);
 		files.filter(function(file) { return file.substr(-5) === '.html'; }).forEach(function(file) { buildManager.files['html'].push(file)  });
-		
 
 		files = fs.readdirSync(rootFolder + wsFolder + "/" + workingFolder + "/Components");
 		files.filter(function(file) { return file.substr(-5) === '.cdml'; }).forEach(function(file) { buildManager.files['cdml'].push(file)  });
 		
+		
+			for (var i = 0; i < buildManager.files['html'].length; i++) {
+				var indexPath = rootFolder + wsFolder + "/" + workingFolder + "/" +buildManager.files['html'][i];
+				var indexFinalPath = rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/" + buildManager.files['html'][i];
+				var indexContent = fs.readFileSync(indexPath,'utf8');
+				
+				for (var i = 0; i < buildManager.components.length; i++) {
+					var componentFilePath = rootFolder + wsFolder + "/" + workingFolder + "/Components/" + buildManager.components[i].iname;
+					var componentContent = fs.readFileSync(componentFilePath,'utf8');
+					var componentDOM = $.parseHTML(componentContent);
+					var componentTagID = componentDOM[0].firstChild.parentElement.id;
+					
+					console.log('<'+componentTagID+'></'+componentTagID+'>');
+					componentContent = componentContent.replace( new RegExp("\n", "g") , "\n\t\t" );
+
+					console.log(componentContent);
+					indexContent = indexContent.replace(new RegExp( '<'+componentTagID+'></'+componentTagID+'>' , 'g'), componentContent);
+				}
+
+				console.log(indexContent);
+				fs.writeFileSync(indexFinalPath,indexContent);
+			}
 
 		// TODO
 		// Loop through stored components and:
@@ -30,6 +56,7 @@ let buildManager = {
 		// use the component information to copy component layouts into all html files which reference the component
 		// Make build tool accessible by save function and run function. Make build button repace stop button
 
+		changeStatus("BUILD COMPLETED SUCCESSFULLY!",5);
 		return true;
 	}
 }
