@@ -100,6 +100,7 @@ function setupTree(){
 }
 
 function saveAllUnsaved(){
+	eventManager.triggerEvent('save');
 	$.each(editSessions, function(k, v) {
     		if (v != undefined) fs.writeFileSync( k , v.getDocument().$lines.join("\n") );	
 	});
@@ -271,7 +272,7 @@ function createWSItem(name,ftype,withStuff) {
 	$('#panel_Create_new').remove();
 	refreshTree();
 	createItemPanelContent = "";
-	ace.edit("editor").getSession().setValue("");
+	// ace.edit("editor").getSession().setValue("");
 	setupTree();
 }
 

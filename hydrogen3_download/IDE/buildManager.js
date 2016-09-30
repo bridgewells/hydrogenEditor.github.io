@@ -27,14 +27,15 @@ let buildManager = {
 		files = fs.readdirSync(rootFolder + wsFolder + "/" + workingFolder + "/Components");
 		files.filter(function(file) { return file.substr(-5) === '.cdml'; }).forEach(function(file) { buildManager.files['cdml'].push(file)  });
 		
-		
+			console.log(buildManager.files['html'].length);
 			for (var i = 0; i < buildManager.files['html'].length; i++) {
+				console.log(buildManager.files['html'][i]);
 				var indexPath = rootFolder + wsFolder + "/" + workingFolder + "/" +buildManager.files['html'][i];
 				var indexFinalPath = rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/" + buildManager.files['html'][i];
 				var indexContent = fs.readFileSync(indexPath,'utf8');
 				
-				for (var i = 0; i < buildManager.components.length; i++) {
-					var componentFilePath = rootFolder + wsFolder + "/" + workingFolder + "/Components/" + buildManager.components[i].iname;
+				for (var x = 0; x < buildManager.components.length; x++) {
+					var componentFilePath = rootFolder + wsFolder + "/" + workingFolder + "/Components/" + buildManager.components[x].iname;
 					var componentContent = fs.readFileSync(componentFilePath,'utf8');
 					var componentDOM = $.parseHTML(componentContent);
 					var componentTagID = componentDOM[0].firstChild.parentElement.id;
@@ -46,7 +47,7 @@ let buildManager = {
 					indexContent = indexContent.replace(new RegExp( '<'+componentTagID+'></'+componentTagID+'>' , 'g'), componentContent);
 				}
 
-				console.log(indexContent);
+				console.log('222:'+indexContent);
 				fs.writeFileSync(indexFinalPath,indexContent);
 			}
 

@@ -1,0 +1,10 @@
+.hpointing{
+	border: 2px solid #cc3333 !important;
+}
+
+.pointerMarker{
+	border-radius: 5px;
+	background:rgba(25,25,25,.5);
+	color:white;
+	position: fixed;
+}

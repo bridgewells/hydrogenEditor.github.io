@@ -55,3 +55,4 @@ let eventManager = {
 	eventManager.createEvent('startingUp');
 	eventManager.createEvent('startUpComplete');
 	eventManager.createEvent('readyForPlugin');
+	eventManager.createEvent('searching');

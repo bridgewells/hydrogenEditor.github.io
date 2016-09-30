@@ -108,6 +108,7 @@ function hideSearchResults(){
 }
 
 function showSearchResults(terms){
+	eventManager.triggerEvent('searching',terms);
 	if (terms.indexOf("file:") == 0){
 
 	}
@@ -170,6 +171,30 @@ function countInstances(string, word) {
 		$(document.body).on('click','#cmd_newitm',function(){
 			createItemPanel();
 		});
+		$(document.body).on('click','#cmd_addmedia',function(){
+			if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
+				if (buildManager.buildCurrent() == true) {
+					$('.liveEditor').toggleClass('bye');
+					$('.liveEditor').attr("src","file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1));
+					$(this).toggleClass('bactive');
+
+					var __dirname = fs.realpathSync('.');
+					var $head = $(".liveEditor").contents().find("head");
+
+					var myIframe = $(".liveEditor")[0];
+					var script = myIframe.contentWindow.document.createElement("script");
+					script.type = "text/javascript";
+					script.defer = true;
+					script.src = "file://"+__dirname+"/dependencies/js/hextra.js";
+					myIframe.contentWindow.document.body.appendChild(script);
+					console.log(script);
+					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
+				}		
+			}
+			$('ul.breadcrumb>li').text(function (_,txt) {
+    				return txt.slice(0, -1);
+			});
+		});
 		$(document.body).on('click','#cmd_delete',function(){
 			var curpath = buildPathFromTree( $('#tree').treeview('getSelected')[0] ).direct;
 			if (curpath != undefined) require('fs').unlinkSync(curpath);
@@ -201,9 +226,11 @@ function countInstances(string, word) {
 
 		$(document.body).on('click','#create-item-button',function(){
 			if (createItemPanelContent!=""){
+				saveEditorContent();
 				createWSItem( $('#create-item-input').val() , $('.blankPanel>div>.inline.sel>h3').text() , createItemPanelContent );
 			}
 			else{
+				saveEditorContent();
 				createWSItem( $('#create-item-input').val() , $('.blankPanel>div>.inline.sel>h3').text() );
 			}
 			$('#panel_Create_new').remove();
@@ -258,10 +285,12 @@ function max_h(){
 function saveEditorContent(){
 	if (currentlyLoadedPath == ""){
 		changeStatusNegative("UNABLE TO SAVE. Select file first",3);
+		eventManager.triggerEvent('saveError');
 	}
 	else{
 		fs.writeFileSync( currentlyLoadedPath , editor.getSession().getValue() );	
 		changeStatus("SAVED!",1);
+		eventManager.triggerEvent('save');
 	}
 }
 
