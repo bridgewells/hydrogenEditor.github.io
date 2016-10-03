@@ -1,6 +1,7 @@
 {
   "name": "hydrogen",
   "main": "index.html",
+  "version": "3.0.0",
   "js-flags": "--expose-gc",
   "window": {
     "icon": "dependencies/img/logoWhite.png",

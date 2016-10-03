@@ -12,6 +12,32 @@
 	color:deepskyblue;
 }
 
+.delBtn{
+	padding:15px; 
+	border-radius: 5px; 
+	margin: 5px; 
+	border:0; 
+	background: transparent; 
+	color: gray; 
+	font-weight: 300; 
+	font-size: 24px;
+}
+
+.delBtn#noDelete:hover{
+	color:#cc3333;
+	transition: all .3s;
+}
+
+.iconDelete{
+	font-size: 80px !important;
+	color:dimgray !important;
+}
+
+.delBtn#yesDelete:hover{
+	color:dodgerblue;
+	transition: all .3s;
+}
+
 .liveEditor{
 	position: fixed;
 	width: 100%;

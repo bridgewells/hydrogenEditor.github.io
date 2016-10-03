@@ -1,7 +1,7 @@
 "use strict";
 
 var workingFolder = "";
-var rootFolder = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE);
+var rootFolder = (process.env.HOME || "c:\\"+process.env.HOMEPATH || process.env.USERPROFILE);
 var wsFolder = "/Documents/hydrogen3/projects";
 var piFolder = "/Documents/hydrogen3/plugins";
 

@@ -112,11 +112,16 @@
     			<img src="hydrogenIDE_main.png"/>
 		</div>
 		<div class="wid50">
-			<button id="downloadBTN">Download MAC</button>
-			<h2 class="dl">v3.0.0.0 - Release - Stable</h2>
-			<hr>
-			<button id="downloadBTN">Download WIN</button>
-			<h2 class="dl">v3.0.0.0 - Release - Stable</h2>
+			<div class="wid50">
+				<button id="downloadBTN" onclick="location='dl/win32.zip'">Download Win32</button>
+				<br>
+				<button id="downloadBTN" onclick="location='dl/win64.zip'">Download Win64</button>
+			</div>
+			<div class="wid50">
+				<button id="downloadBTN" disabled>Download OSX/MacOS</button>
+				<br>
+				<button id="downloadBTN" disabled>Download CorePack</button>
+			</div>
 		</div>
 		<div class="spacer100"></div>
 		<!-- <hr> -->

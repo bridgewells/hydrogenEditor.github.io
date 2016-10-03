@@ -52,6 +52,7 @@ let sessionManager = {
 			editor.setSession(editSessions[path]);
 		}
 		currentlyLoadedPath = path;
+		if (getFileExtension(path).toLowerCase() == "html"){ lastHTMLpath = path }
 	},
 	removeSession:function(path){
 		editSessions[path] = undefined;
@@ -60,10 +61,9 @@ let sessionManager = {
 
 var editSessions = {};
 var currentlyLoadedPath = "";
+var lastHTMLpath = "";
 
 //editSessions holds keyValue pair > path : session
-
-
 
 function changeStatus(newstat,sec){
 	sec = (sec || 2);
@@ -189,31 +189,53 @@ function countInstances(string, word) {
 					myIframe.contentWindow.document.body.appendChild(script);
 					console.log(script);
 					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
-				}		
+				}
+				$('ul.breadcrumb>li').text(function (_,txt) {
+	    				return txt.slice(0, -1);
+				});	
 			}
-			$('ul.breadcrumb>li').text(function (_,txt) {
-    				return txt.slice(0, -1);
-			});
+			else{
+				if (lastHTMLpath != "" && buildManager.buildCurrent() == true){
+					$('.liveEditor').toggleClass('bye');
+					$('.liveEditor').attr("src","file://"+lastHTMLpath);
+					$(this).toggleClass('bactive');
+
+					var __dirname = fs.realpathSync('.');
+					var $head = $(".liveEditor").contents().find("head");
+
+					var myIframe = $(".liveEditor")[0];
+					var script = myIframe.contentWindow.document.createElement("script");
+					script.type = "text/javascript";
+					script.defer = true;
+					script.src = "file://"+__dirname+"/dependencies/js/hextra.js";
+					myIframe.contentWindow.document.body.appendChild(script);
+					console.log(script);
+					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
+				}
+			}
+			
 		});
 		$(document.body).on('click','#cmd_delete',function(){
 			var curpath = buildPathFromTree( $('#tree').treeview('getSelected')[0] ).direct;
-			if (curpath != undefined) require('fs').unlinkSync(curpath);
-			changeStatus('Deleted '+curpath+'!',1);
-			var struct = dirTree(rootFolder + wsFolder + "/" + workingFolder);
-			var treeX = genTreeJSON(struct);
-			$('#tree').treeview({data:treeX});
-			sessionManager.removeSession(curpath);
-			ace.edit("editor").getSession().setValue("");
-			refreshTree();
-			setupTree();
+			if (curpath != undefined) 
+				{
+					createDeleteItemPanel(curpath);
+				}
+			
 		});
 		$(document.body).on('click','#cmd_run',function(){
 			if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
-				if (buildManager.buildCurrent() == true) views.create.preview.location( "file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1) );
+				if (buildManager.buildCurrent() == true) {
+					views.create.preview.location( "file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1) );
+				}
+				$('ul.breadcrumb>li').text(function (_,txt) {
+	    				return txt.slice(0, -1);
+				});
 			}
-			$('ul.breadcrumb>li').text(function (_,txt) {
-    				return txt.slice(0, -1);
-			});
+			else{
+				if (buildManager.buildCurrent() == true) views.create.preview.location( "file://" + lastHTMLpath );
+			}
+			
 		});
 
 		$(document.body).on('click','#cmd_undo',function(){
@@ -314,6 +336,35 @@ function createItemPanel(withContent){
 	views.add.closeButton();
 }
 
+function createDeleteItemPanel(withContent){
+	views.create.panel();
+	views.load.into('#panel_Create_new','deleteConfirmation');
+	views.add.closeButton();
+
+	var path = require('path');
+	var file = withContent;
+	var filename = path.parse(file).base;
+
+	$('#delText').text('Are you sure you want to delete '+filename+'?');
+
+	$('#yesDelete').on('click',function(){
+		require('fs').unlinkSync(withContent);
+		changeStatus('Deleted '+withContent+'!',1);
+		var struct = dirTree(rootFolder + wsFolder + "/" + workingFolder);
+		var treeX = genTreeJSON(struct);
+		$('#tree').treeview({data:treeX});
+		sessionManager.removeSession(withContent);
+		ace.edit("editor").getSession().setValue("");
+		refreshTree();
+		setupTree();
+		views.close.panel();
+	});
+
+	$('#noDelete').on('click',function(){
+		views.close.panel();
+	});
+}
+
 function shaveOffExtraSep(path){
 	var wordSoFar = "";
 	for (var i = 0; i < path.length; i++) {
@@ -356,3 +407,9 @@ function treePathParentDir(path,stopCount){
 	}
 	return wordSoFar;
 }
+
+win.on('close', function() {
+	this.hide();
+	saveEditorContent();
+	this.close(true);
+});

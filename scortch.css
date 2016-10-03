@@ -9,7 +9,7 @@
 	pointer-events: none;
 }
 
-#downloadBTN{
+#downloadBTN:not([disabled]){
 	color: white;
 	background-color: deepskyblue;
 	padding:15px;
@@ -21,11 +21,22 @@
 	transition: all .12s;
 }
 
-#downloadBTN:hover{
+#downloadBTN:not([disabled]):hover{
 	cursor: pointer !important;
 	box-shadow: 0px 0px 120px gray;
 	transform: perspective(500px) translate3d(0px,0px,50px);
 	transition: all .5s;
+}
+
+#downloadBTN[disabled]{
+	color:dimgray;
+	background-color: gainsboro;
+	padding:15px;
+	border-radius: 5px;
+	font-size: 24px;
+	border: none;
+	width: 200px;
+	margin-top: 6%;
 }
 
 .dl{

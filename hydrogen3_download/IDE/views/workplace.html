@@ -57,6 +57,7 @@
 
 		<script type="text/javascript" src="assets/src-noconflict/ace.js"></script>
 <script src="assets/src-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script src="assets/src-noconflict/ext-emmet.js" type="text/javascript" charset="utf-8"></script>
 <script>	
 	win.maximize();
 	var editor = ace.edit("editor");
@@ -73,6 +74,7 @@
 	$('#editor').css({
 		"zIndex":"1"
 	});
+	setTimeout(disable_editor,1000);
 
 	if (nextMove == "continue"){
 		remove_CreatePanel();

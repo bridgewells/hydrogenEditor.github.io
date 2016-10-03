@@ -16,8 +16,11 @@ let buildManager = {
 		try{ copyFolderRecursiveSync(rootFolder + wsFolder + "/" + workingFolder, rootFolder + wsFolder + "/" + finalFolder);
 		}catch(bf){ changeStatusNegative('BUILD FAILED!!',5) ;return false; }
 
-		evalInContext( fs.readFileSync(rootFolder + wsFolder + "/" + workingFolder + "/Components/interfaces.js") +"console.log(this)", this);
-		deleteFolderRecursive(rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/Components"); 
+		try{
+			evalInContext( fs.readFileSync(rootFolder + wsFolder + "/" + workingFolder + "/Components/interfaces.js") +"console.log(this)", this);
+			deleteFolderRecursive(rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/Components"); 
+		}
+		catch(e){}
 		buildManager.files['html'] = [];
 		buildManager.files['cdml'] = [];
 
