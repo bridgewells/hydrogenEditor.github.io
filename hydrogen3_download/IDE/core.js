@@ -181,13 +181,13 @@ function countInstances(string, word) {
 					var __dirname = fs.realpathSync('.');
 					var $head = $(".liveEditor").contents().find("head");
 
-					var myIframe = $(".liveEditor")[0];
-					var script = myIframe.contentWindow.document.createElement("script");
-					script.type = "text/javascript";
-					script.defer = true;
-					script.src = "file://"+__dirname+"/dependencies/js/hextra.js";
-					myIframe.contentWindow.document.body.appendChild(script);
-					console.log(script);
+					// setTimeout(function(){
+					// 	var r1 = $('.liveEditor').contents().find('body');
+					// 	var r11 = fs.readFileSync(__dirname+"/dependencies/js/hextra.js",'utf8');
+					// 	var r2 = $('<script>').html( r11 );
+					// 	r1[0].appendChild(r2[0]);
+					// },1000);
+					setTimeout(prick,300);
 					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
 				}
 				$('ul.breadcrumb>li').text(function (_,txt) {
