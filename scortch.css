@@ -9,6 +9,68 @@
 	pointer-events: none;
 }
 
+code{
+	background:gainsboro;
+	padding-left: 6px;
+	padding-right: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-radius: 3px;
+	vertical-align: middle;
+	font-size: 15px;
+	margin:2px;
+}
+
+pre{
+	background:gainsboro;
+	border-radius: 3px;
+	vertical-align: middle;
+	font-size: 15px;
+	padding-top: 24px;
+	padding-bottom: 24px;
+	margin-bottom: 5px;
+}
+
+samp{
+	background-color: gray;
+	border-radius: 3px;
+	color:white;
+	padding:3px;
+	width: 100%;
+}
+
+samp:before{
+	content: ">>"
+}
+
+kbd{
+	background-color: black;
+	color:lightgray;
+	padding:4px;
+	text-transform: uppercase;
+	border-radius: 6px;
+}
+
+.docBlock{
+	text-align: left;
+	width:60%;
+	margin-left:20%;
+	border:1px solid gray;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.docBlock h1{
+	margin-top:0px !important;
+	padding-top: 0px !important;
+	padding-bottom: 3px;
+	font-size: 35px;
+}
+
+.docBlock p{
+	font-family: 'Raleway';
+}
+
 #downloadBTN:not([disabled]){
 	color: white;
 	background-color: deepskyblue;
