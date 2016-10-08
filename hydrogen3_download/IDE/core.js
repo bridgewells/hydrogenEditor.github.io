@@ -317,6 +317,7 @@ function saveEditorContent(){
 		eventManager.triggerEvent('save');
 	}
 	if (liveEditorOpened){
+		clearEditables();
 		var html_pretty = require('js-beautify').html;
 		var documentContent =  html_pretty( "<!DOCTYPE html><html>" + $(".liveEditor").contents().find("html").html() + "</html>" , { 
 			indent_size: 4,
