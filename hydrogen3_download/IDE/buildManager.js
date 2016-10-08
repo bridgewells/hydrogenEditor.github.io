@@ -32,7 +32,6 @@ let buildManager = {
 		
 			console.log(buildManager.files['html'].length);
 			for (var i = 0; i < buildManager.files['html'].length; i++) {
-				console.log(buildManager.files['html'][i]);
 				var indexPath = rootFolder + wsFolder + "/" + workingFolder + "/" +buildManager.files['html'][i];
 				var indexFinalPath = rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/" + buildManager.files['html'][i];
 				var indexContent = fs.readFileSync(indexPath,'utf8');

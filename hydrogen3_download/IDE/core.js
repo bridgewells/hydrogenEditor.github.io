@@ -6,6 +6,7 @@ var win = gui.Window.get();
 var nextMove = "";
 var statusBarColor = "white";
 var statusBarBackground = "deepskyblue";
+var liveEditorOpened = false;
 
 let UI = {
 	editor:{
@@ -35,6 +36,7 @@ let sessionManager = {
 	newTemp:function(text,mode){
 		var a = ace.createEditSession(text,mode);
 		editor.setSession(a);
+		editor.getSession().setUseWrapMode(true);
 		currentlyLoadedPath = "";
 	},
 	applyToPath:function(path){
@@ -46,6 +48,7 @@ let sessionManager = {
 			var a = ace.createEditSession("","");
 			editSessions[path] = a;
 			editor.setSession(a);
+			editor.getSession().setUseWrapMode(true);
 			UI.editor.focus();
 		}
 		else{
@@ -177,16 +180,16 @@ function countInstances(string, word) {
 					$('.liveEditor').toggleClass('bye');
 					$('.liveEditor').attr("src","file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1));
 					$(this).toggleClass('bactive');
+					liveEditorOpened = !liveEditorOpened;
+
+					if ( $(".liveEditor").hasClass("bye")==false ){
+						reo.clearAll();
+						reo.hide();
+					}
 
 					var __dirname = fs.realpathSync('.');
 					var $head = $(".liveEditor").contents().find("head");
 
-					// setTimeout(function(){
-					// 	var r1 = $('.liveEditor').contents().find('body');
-					// 	var r11 = fs.readFileSync(__dirname+"/dependencies/js/hextra.js",'utf8');
-					// 	var r2 = $('<script>').html( r11 );
-					// 	r1[0].appendChild(r2[0]);
-					// },1000);
 					setTimeout(prick,300);
 					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
 				}
@@ -199,17 +202,16 @@ function countInstances(string, word) {
 					$('.liveEditor').toggleClass('bye');
 					$('.liveEditor').attr("src","file://"+lastHTMLpath);
 					$(this).toggleClass('bactive');
+					liveEditorOpened = !liveEditorOpened;
+					if ( $(".liveEditor").hasClass("bye")==false ){
+						reo.clearAll();
+						reo.hide();
+					}
 
 					var __dirname = fs.realpathSync('.');
 					var $head = $(".liveEditor").contents().find("head");
 
-					var myIframe = $(".liveEditor")[0];
-					var script = myIframe.contentWindow.document.createElement("script");
-					script.type = "text/javascript";
-					script.defer = true;
-					script.src = "file://"+__dirname+"/dependencies/js/hextra.js";
-					myIframe.contentWindow.document.body.appendChild(script);
-					console.log(script);
+					setTimeout(prick,300);
 					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
 				}
 			}
@@ -313,6 +315,23 @@ function saveEditorContent(){
 		fs.writeFileSync( currentlyLoadedPath , editor.getSession().getValue() );	
 		changeStatus("SAVED!",1);
 		eventManager.triggerEvent('save');
+	}
+	if (liveEditorOpened){
+		var html_pretty = require('js-beautify').html;
+		var documentContent =  html_pretty( "<!DOCTYPE html><html>" + $(".liveEditor").contents().find("html").html() + "</html>" , { 
+			indent_size: 4,
+			indent_char:" ",
+			indent_with_tabs:true,
+			end_with_newline:false,
+			indent_inner_html:true,
+			wrap_line_length:0,
+			unformatted:["pre","code"]
+		 } ) ;
+		fs.writeFileSync( currentlyLoadedPath , documentContent);	
+		changeStatus("SAVED!",1);
+		eventManager.triggerEvent('save');
+		editor.getSession().setValue(documentContent);
+		editor.getSession().setUseWrapMode(true);
 	}
 }
 

@@ -171,7 +171,6 @@ function checkTypePath(path){
 
 function genTreeJSON(struct){
 	var b = JSON.parse("["+JSON.stringify(struct).replace(workingFolder,"My Project").replace(/name/g,"text").replace(/children/g,"nodes")+"]");
-	console.log(b);
 	return b;
 }
 
