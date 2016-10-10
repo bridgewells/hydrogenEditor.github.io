@@ -68,7 +68,7 @@ function setupDirectory(){
 	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components");
 	// fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments");
 	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets");
-	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"index.html", 'w'));
+	// fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"index.html", 'w'));
 	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets/style.css", 'w'));
 }
 

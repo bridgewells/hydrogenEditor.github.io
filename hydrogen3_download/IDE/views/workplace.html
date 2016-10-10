@@ -8,7 +8,7 @@
 			<div id="form_create_project">
 				<h1> hydrogen </h1>  
 				<h5> Lets begin by entering the details </h5>
-				<h3 class="inline">Project Name</h3> <input type="text" id="new-project-name"> <br>
+				<h3 class="inline">Project Name</h3> <input type="text" id="new-project-name" onkeypress="return runScript(event,'createProj')"> <br>
 				<a class="btn primary" onclick="createProject(document.getElementById('new-project-name').value);">Create</a>
 			</div>
 		</div>

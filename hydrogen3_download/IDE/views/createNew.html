@@ -28,7 +28,7 @@
 		<h3>Other (plain)</h3>
 	</div>
 	<hr>
-	<h3 style="font-size: 1.4vw !important;">File name:</h3>
-	<input type="text" class="smart" id="create-item-input">
+	<h3 style="font-size: 1.4vw !important;">File name (without extension):</h3>
+	<input type="text" class="smart" id="create-item-input" onkeypress="return runScript(event,'newItem')">
 	<button class="smart material-icons" id="create-item-button">done</button>
 </div>
