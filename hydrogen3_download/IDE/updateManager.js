@@ -2,8 +2,8 @@
 let hydrogenInformationPack = {
 	version: '3.1.2.0',
 	updatables:[
-		"buildManager.js",
 		"core.js",
+		"buildManager.js",
 		"eventManager.js",
 		"filemanager.js",
 		"index.html",
@@ -73,7 +73,7 @@ function askUserUpdate(important,info){
 	if (important == 'true'){
 		getAndInstallUpdates()
 	}
-	else if (confirm('A '+info.status' release is available now for users on the '+info.channel+' channel. Would you like to install it?')) {
+	else if (confirm('A '+info.status+' release is available now for users on the '+info.channel+' channel. Would you like to install it?')) {
 		getAndInstallUpdates()
 	} else {
 		eventManager.triggerEvent('updating','cancelled','Cancelled by the user!');
