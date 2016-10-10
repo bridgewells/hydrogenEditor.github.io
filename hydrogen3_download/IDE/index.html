@@ -45,7 +45,7 @@
 					<ul>
 						<a onclick="goto_create()"><li>New Project</li></a>
 						<a href="#"><li>Open</li></a>
-						<a href="#"><li>About</li></a>
+						<a href="#"><li id="xvers">About</li></a>
 						<a href="#" onclick="require('nw.gui').Window.get().close()"><li>Close</li></a>
 					</ul>
 				</div>
@@ -73,8 +73,6 @@
 			 	}
 			 	return arr2;
 			}
-
-
 
 			var jObj = JSON.parse( require('fs').readFileSync(global.__dirname+'/assets/mem.json') ).recents;
 			// var jObj = JSON.parse( require('fs').readFileSync('assets\\mem.json') ).recents;

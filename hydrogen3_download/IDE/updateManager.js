@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.1.3.1',
+	version: '3.2.1.0',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -67,7 +67,7 @@ function analyseOnlineVersion(versionContent){
 	else if (vl.major < vr.major){
 		gotUpdate = true;
 	}
-	console.log(gotUpdate);
+	console.log([vl,vr]);
 	if (gotUpdate){
 		askUserUpdate(versionContent.important,versionContent)
 	}
@@ -154,3 +154,5 @@ function pollStatus(fn){
 eventManager.onEvent('updating',function(s){
 	console.log(s);
 })
+
+$('#xvers').html("Version: "+hydrogenInformationPack.version);
