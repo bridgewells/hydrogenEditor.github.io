@@ -1,8 +1,9 @@
 {
-	"version" :"3.1.2.0" ,
+	"version" :"3.1.2.1" ,
 	"channel" :"beta" ,
 	"status" :"stable" ,
 	"important" :"false" ,
+	"target":["win32","win64","darwin"],
 	"details" :" " ,
-	"changes" :["speed and stability improvements","Implemented new keyboard shortcuts","Auto updater now active"]
+	"changes" :["speed and stability improvements","updater target now checked","Auto updater now active"]
 }
