@@ -1,13 +1,149 @@
 
+let hydrogenInformationPack = {
+	version: '3.1.2.0',
+	updatables:[
+		"buildManager.js",
+		"core.js",
+		"eventManager.js",
+		"filemanager.js",
+		"index.html",
+		"package.json",
+		"pluginManager.js",
+		"shortcutManager.js",
+		"random.jpg",
+		"supportManager.js",
+		"updateManager.js",
+		"viewManager.js",
+		"views/createNew.html",
+		"views/deleteConfirmation.html",
+		"views/workplace.html",
+		"dependencies/js/hextra.js",
+		"dependencies/js/jquery.js",
+		"dependencies/js/hextra_controller.js",
+		"dependencies/css/core.css",
+		"dependencies/css/hextra.css",
+		"assets/reo.js",
+		"assets/webKS.css",
+		"assets/webKS.js",
+		"assets/reo.css"
+	],
+	jobCounter:0,
+	poll:undefined,
+	pollers:[]
+}
 
 eventManager.triggerEvent('updating','checking','Checking server for latest updates...');
 
-console.log("u");
-
-// $.getJSON( "https://hydrogenEditor.github.io/version.json", function( data ) { 
-// 	console.log(data) 
-// });
-
-var s = $( "<p></p>" ).load("https://hydrogenEditor.github.io/version.json",function(){
-	console.log( $(this).html().version  )
+$( "<p></p>" ).load("https://hydrogenEditor.github.io/version.json",function(){
+	analyseOnlineVersion( JSON.parse( $(this).html() ) );
 });
+
+function analyseOnlineVersion(versionContent){
+	var version = {
+		local:hydrogenInformationPack.version,
+		remote:versionContent.version
+	}
+	var gotUpdate = false;
+	var vl = explodeVersionNumbers(version.local);
+	var vr = explodeVersionNumbers(version.remote);
+	if (vl.major == vr.major){
+		if (vl.minor == vr.minor){
+			if (vl.release == vr.release){
+				if (vl.build < vl.build){
+					gotUpdate = true;
+				}
+			}
+			else if (vl.release < vr.release){
+				gotUpdate = true;
+			}
+		}
+		else if (vl.minor < vr.minor){
+			gotUpdate = true;
+		}
+	}
+	else if (vl.major < vr.major){
+		gotUpdate = true;
+	}
+	if (gotUpdate){
+		askUserUpdate(versionContent.important,versionContent)
+	}
+}
+
+function askUserUpdate(important,info){
+	if (important == 'true'){
+		getAndInstallUpdates()
+	}
+	else if (confirm('Version '+info.version+' is out now!! Would you like to install it?')) {
+		getAndInstallUpdates()
+	} else {
+		eventManager.triggerEvent('updating','cancelled','Cancelled by the user!');
+		return;
+	}
+}
+
+function getAndInstallUpdates(){
+	eventManager.triggerEvent('updating','working','Calculating updates...');
+	console.log("Update installing");
+	try{
+		require("fs").mkdirSync(rootFolder + wsFolder.substr(0,wsFolder.lastIndexOf("/")) + "/packs")
+	}
+	catch(xxs){
+		console.log("packs folder already exists");
+	}
+	startPoll();
+	eventManager.triggerEvent('updating','download','downloading updates...');
+	for (var i = 0; i < hydrogenInformationPack.updatables.length; i++) {
+		download(hydrogenInformationPack.updatables[i]);
+		hydrogenInformationPack.jobCounter += 1;
+	}
+}
+
+function explodeVersionNumbers(vn){
+	var [major,minor,release,build] = vn.split(".");
+	return {
+		'major':parseInt(major),
+		'minor':parseInt(minor),
+		'release':parseInt(release),
+		'build':parseInt(build)
+	}
+}
+
+function download(filename){
+	var http = require('https');
+	var fs = require('fs');
+
+	var file = fs.createWriteStream("./"+fileName);
+	var request = http.get("https://hydrogeneditor.github.io/hydrogen3_download/IDE/"+filename, function(response) {
+	  response.pipe(file);
+	  hydrogenInformationPack.jobCounter -= 1;
+	  eventManager.triggerEvent('updating','installing',file);
+	  if (hydrogenInformationPack.jobCounter == 0){
+	  	endPoll();
+	  	eventManager.triggerEvent('updating','completed','Updates were installed successfully');
+	  }
+	});
+}
+
+function startPoll(){
+	hydrogenInformationPack.poll = setInterval(function(){
+		for (var i = 0; i < hydrogenInformationPack.pollers.length; i++) {
+			hydrogenInformationPack.pollers[i]( hydrogenInformationPack.jobCounter )
+		}
+	},100);
+}
+
+function endPoll(){
+	clearInterval(hydrogenInformationPack.poll);
+	for (var i = 0; i < hydrogenInformationPack.pollers.length; i++) {
+		hydrogenInformationPack.pollers[i]( hydrogenInformationPack.jobCounter )
+	}
+	hydrogenInformationPack.pollers = [];
+}
+
+function pollStatus(fn){
+	hydrogenInformationPack.pollers.push(fn)
+}
+
+eventManager.onEvent('updating',function(s){
+	console.log(s);
+})
