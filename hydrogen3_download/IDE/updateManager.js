@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.1.2.1',
+	version: '3.1.3.1',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -67,13 +67,14 @@ function analyseOnlineVersion(versionContent){
 	else if (vl.major < vr.major){
 		gotUpdate = true;
 	}
+	console.log(gotUpdate);
 	if (gotUpdate){
 		askUserUpdate(versionContent.important,versionContent)
 	}
 }
 
 function askUserUpdate(important,info){
-	if (hydrogenInformationPack.channel == info.channel && hydrogenInformationPack.status == info.status && info.target.indexOf(hydrogenInformationPack.platform) != -1) return;
+	// if (hydrogenInformationPack.channel == info.channel && hydrogenInformationPack.status == info.status && info.target.indexOf(hydrogenInformationPack.platform) != -1) return;
 	if (important == 'true'){
 		getAndInstallUpdates()
 	}
