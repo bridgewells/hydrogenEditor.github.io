@@ -1,6 +1,8 @@
 
 let hydrogenInformationPack = {
 	version: '3.1.2.0',
+	channel:'beta',
+	status:'stable',
 	updatables:[
 		"core.js",
 		"buildManager.js",
@@ -70,6 +72,7 @@ function analyseOnlineVersion(versionContent){
 }
 
 function askUserUpdate(important,info){
+	if (hydrogenInformationPack.channel == info.channel && hydrogenInformationPack.status == info.status) return;
 	if (important == 'true'){
 		getAndInstallUpdates()
 	}
