@@ -24,7 +24,7 @@ let hydrogenInformationPack = {
 		"dependencies/css/hextra.css",
 		"assets/reo.js",
 		"assets/webKS.css",
-		"assets/webKS.js",
+		"assets/WebKS.js",
 		"assets/reo.css"
 	],
 	jobCounter:0,
