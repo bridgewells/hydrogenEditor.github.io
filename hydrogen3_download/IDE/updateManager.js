@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.0.2.0',
+	version: '3.1.2.0',
 	updatables:[
 		"buildManager.js",
 		"core.js",
@@ -113,11 +113,10 @@ function download(filename){
 	var fs = require('fs');
 
 	var file = fs.createWriteStream("./"+filename);
-	var ff =filename;
 	var request = http.get("https://hydrogeneditor.github.io/hydrogen3_download/IDE/"+filename, function(response) {
 	  response.pipe(file);
 	  hydrogenInformationPack.jobCounter -= 1;
-	  eventManager.triggerEvent('updating','installing',ff);
+	  eventManager.triggerEvent('updating','installing',file);
 	  if (hydrogenInformationPack.jobCounter == 0){
 	  	endPoll();
 	  	eventManager.triggerEvent('updating','completed','Updates were installed successfully');
@@ -139,6 +138,8 @@ function endPoll(){
 		hydrogenInformationPack.pollers[i]( hydrogenInformationPack.jobCounter )
 	}
 	hydrogenInformationPack.pollers = [];
+	alert("Updates installed! Performing quick reload. . .")
+	location.reload();
 }
 
 function pollStatus(fn){
