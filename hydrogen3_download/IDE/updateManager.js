@@ -73,7 +73,7 @@ function askUserUpdate(important,info){
 	if (important == 'true'){
 		getAndInstallUpdates()
 	}
-	else if (confirm('Version '+info.version+' is out now!! Would you like to install it?')) {
+	else if (confirm('A '+info.status' release is available now for users on the '+info.channel+' channel. Would you like to install it?')) {
 		getAndInstallUpdates()
 	} else {
 		eventManager.triggerEvent('updating','cancelled','Cancelled by the user!');
