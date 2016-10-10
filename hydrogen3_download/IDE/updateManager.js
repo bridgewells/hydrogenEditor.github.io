@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.1.2.0',
+	version: '3.0.2.0',
 	updatables:[
 		"buildManager.js",
 		"core.js",
@@ -112,11 +112,12 @@ function download(filename){
 	var http = require('https');
 	var fs = require('fs');
 
-	var file = fs.createWriteStream("./"+fileName);
+	var file = fs.createWriteStream("./"+filename);
+	var ff =filename;
 	var request = http.get("https://hydrogeneditor.github.io/hydrogen3_download/IDE/"+filename, function(response) {
 	  response.pipe(file);
 	  hydrogenInformationPack.jobCounter -= 1;
-	  eventManager.triggerEvent('updating','installing',file);
+	  eventManager.triggerEvent('updating','installing',ff);
 	  if (hydrogenInformationPack.jobCounter == 0){
 	  	endPoll();
 	  	eventManager.triggerEvent('updating','completed','Updates were installed successfully');
