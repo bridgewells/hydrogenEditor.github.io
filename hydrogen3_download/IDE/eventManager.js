@@ -28,16 +28,6 @@ let eventManager = {
 	}
 }
 
-
-	// eventSet.build = document.createEvent('Event');  eventSet.build.initEvent('build', true, true);
-	// eventSet.run = document.createEvent('Event'); eventSet.run.initEvent('run', true, true);
-	// eventSet.save = document.createEvent('Event'); eventSet.save.initEvent('save', true, true);
-	// eventSet.undo = document.createEvent('Event'); eventSet.undo.initEvent('undo', true, true);
-	// eventSet.redo = document.createEvent('Event'); eventSet.redo.initEvent('redo', true, true);
-	// eventSet.changedSession = document.createEvent('Event'); eventSet.changedSession.initEvent('changedSession', true, true);
-	// eventSet.changedState = document.createEvent('Event'); eventSet.changedState.initEvent('changedState', true, true);
-	// eventSet.loading = document.createEvent('Event'); eventSet.loading.initEvent('loading', true, true);
-
 	eventManager.createEvent('building');
 	eventManager.createEvent('compiling');
 	eventManager.createEvent('buildError');
@@ -56,3 +46,5 @@ let eventManager = {
 	eventManager.createEvent('startUpComplete');
 	eventManager.createEvent('readyForPlugin');
 	eventManager.createEvent('searching');
+	eventManager.createEvent('updating');
+	eventManager.createEvent('shortcutCalled');

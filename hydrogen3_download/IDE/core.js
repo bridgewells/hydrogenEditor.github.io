@@ -175,47 +175,7 @@ function countInstances(string, word) {
 			createItemPanel();
 		});
 		$(document.body).on('click','#cmd_addmedia',function(){
-			if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
-				if (buildManager.buildCurrent() == true) {
-					$('.liveEditor').toggleClass('bye');
-					$('.liveEditor').attr("src","file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1));
-					$(this).toggleClass('bactive');
-					liveEditorOpened = !liveEditorOpened;
-
-					if ( $(".liveEditor").hasClass("bye")==false ){
-						reo.clearAll();
-						reo.hide();
-					}
-
-					var __dirname = fs.realpathSync('.');
-					var $head = $(".liveEditor").contents().find("head");
-
-					setTimeout(prick,300);
-					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
-				}
-				$('ul.breadcrumb>li').text(function (_,txt) {
-	    				return txt.slice(0, -1);
-				});	
-			}
-			else{
-				if (lastHTMLpath != "" && buildManager.buildCurrent() == true){
-					$('.liveEditor').toggleClass('bye');
-					$('.liveEditor').attr("src","file://"+lastHTMLpath);
-					$(this).toggleClass('bactive');
-					liveEditorOpened = !liveEditorOpened;
-					if ( $(".liveEditor").hasClass("bye")==false ){
-						reo.clearAll();
-						reo.hide();
-					}
-
-					var __dirname = fs.realpathSync('.');
-					var $head = $(".liveEditor").contents().find("head");
-
-					setTimeout(prick,300);
-					$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
-				}
-			}
-			
+			openLiveEditor();
 		});
 		$(document.body).on('click','#cmd_delete',function(){
 			var curpath = buildPathFromTree( $('#tree').treeview('getSelected')[0] ).direct;
@@ -226,18 +186,7 @@ function countInstances(string, word) {
 			
 		});
 		$(document.body).on('click','#cmd_run',function(){
-			if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
-				if (buildManager.buildCurrent() == true) {
-					views.create.preview.location( "file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1) );
-				}
-				$('ul.breadcrumb>li').text(function (_,txt) {
-	    				return txt.slice(0, -1);
-				});
-			}
-			else{
-				if (buildManager.buildCurrent() == true) views.create.preview.location( "file://" + lastHTMLpath );
-			}
-			
+			runProject();
 		});
 
 		$(document.body).on('click','#cmd_undo',function(){
@@ -262,6 +211,62 @@ function countInstances(string, word) {
 	},1000);
 })();
 
+function openLiveEditor(){
+	if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
+		if (buildManager.buildCurrent() == true) {
+			$('.liveEditor').toggleClass('bye');
+			$('.liveEditor').attr("src","file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1));
+			$(this).toggleClass('bactive');
+			liveEditorOpened = !liveEditorOpened;
+
+			if ( $(".liveEditor").hasClass("bye")==false ){
+				reo.clearAll();
+				reo.hide();
+			}
+
+			var __dirname = fs.realpathSync('.');
+			var $head = $(".liveEditor").contents().find("head");
+
+			setTimeout(prick,300);
+			$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
+		}
+		$('ul.breadcrumb>li').text(function (_,txt) {
+				return txt.slice(0, -1);
+		});	
+	}
+	else{
+		if (lastHTMLpath != "" && buildManager.buildCurrent() == true){
+			$('.liveEditor').toggleClass('bye');
+			$('.liveEditor').attr("src","file://"+lastHTMLpath);
+			$(this).toggleClass('bactive');
+			liveEditorOpened = !liveEditorOpened;
+			if ( $(".liveEditor").hasClass("bye")==false ){
+				reo.clearAll();
+				reo.hide();
+			}
+
+			var __dirname = fs.realpathSync('.');
+			var $head = $(".liveEditor").contents().find("head");
+
+			setTimeout(prick,300);
+			$head.append($("<link/>", { rel: "stylesheet", href: "file://"+__dirname+"/dependencies/css/hextra.css", type: "text/css" }));
+		}
+	}
+}
+
+function runProject(){
+	if ( $('ul.breadcrumb>li:last').text().split('.').pop() == "html" ) {
+		if (buildManager.buildCurrent() == true) {
+			views.create.preview.location( "file://"+$('ul.breadcrumb>li').append('/').text().replace("My Project",rootFolder + wsFolder+"/"+ finalFolder + "/" + workingFolder).slice(0, -1) );
+		}
+		$('ul.breadcrumb>li').text(function (_,txt) {
+				return txt.slice(0, -1);
+		});
+	}
+	else{
+		if (buildManager.buildCurrent() == true) views.create.preview.location( "file://" + lastHTMLpath );
+	}
+}
 
 function bumpRecents(name,path){
 	var recentsObj = JSON.parse( require('fs').readFileSync(global.__dirname+'/assets/mem.json') );
