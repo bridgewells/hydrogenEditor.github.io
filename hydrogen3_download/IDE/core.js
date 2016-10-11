@@ -211,7 +211,13 @@ function runScript(e,m) {
 	}
 	else{
 		if (e.keyCode == 13) {
-			createProject(document.getElementById('new-project-name').value);
+			var namexy = document.getElementById('new-project-name').value;
+			if (namexy == 'release'){
+				createProject();
+			}
+			else{
+				alert("You cannot use this name for your project");
+			}
 		}
 	}
 }

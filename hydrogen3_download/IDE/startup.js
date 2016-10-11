@@ -10,7 +10,7 @@ for (var i = pathSorted.length - 1; i >= 0; i--) {
 	var fs = require('fs');
 	try {
 		stats = fs.lstatSync(rootFolder + wsFolder+"/"+pathSorted[i]);
-		if (stats.isDirectory()) {
+		if (stats.isDirectory() && pathSorted[i] != "release") {
 			var nameSorted = require('path').basename(pathSorted[i]);
 		    	$('#recentsListSide ul').append( $('<a href="#" onclick="goto_continue();setCurrentWS(\''+nameSorted+'\')"><li>'+nameSorted+'</li></a>') )
 		}
