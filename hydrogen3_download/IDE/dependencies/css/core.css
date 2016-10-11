@@ -1,5 +1,6 @@
 *{
 	box-sizing: border-box;
+	font-weight: 400;
 	font-family: 'Roboto', Segoe-UI, sans-serif;
 	-webkit-transition: .1s;
 }

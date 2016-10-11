@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.53.95',
+	version: '3.41.53.96',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
