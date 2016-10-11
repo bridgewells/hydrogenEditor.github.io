@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.31.54.5',
+	version: '3.31.54.8',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -143,7 +143,8 @@ function endPoll(){
 		hydrogenInformationPack.pollers[i]( hydrogenInformationPack.jobCounter )
 	}
 	hydrogenInformationPack.pollers = [];
-	alert("Updates installed! Performing quick reload. . .")
+	alert("Updates installed! Performing quick reload. . .");
+	location = 'index.html';
 	location.reload();
 }
 

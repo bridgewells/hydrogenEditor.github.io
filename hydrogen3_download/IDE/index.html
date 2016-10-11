@@ -19,6 +19,7 @@
 		<script src="buildManager.js"></script>
 		<script src="core.js" defer></script>
 		<script src="filemanager.js" defer></script>
+		<script src="startup.js" defer></script>
 		<script src="viewManager.js" defer></script>
 		<script src="supportManager.js" defer></script>
 		<script src="dependencies/js/bootstrap-treeview.js" defer></script>
@@ -57,53 +58,6 @@
 				<ul></ul>
 			</div>
 		</div>
-
-		<script>
-
-			eventManager.triggerEvent('startUpComplete');
-
-			function selectionSort(arr,arr2) {
-				let i,m,j;
-				for (i = -1; ++i < arr.length;) {
-					for (m = j = i; ++j < arr.length;) {
-					  if (arr[m] > arr[j]) m = j;
-					}
-					[arr[m], arr[i]] = [arr[i], arr[m]];
-					[arr2[m], arr2[i]] = [arr2[i], arr2[m]];
-			 	}
-			 	return arr2;
-			}
-
-			var jObj = JSON.parse( require('fs').readFileSync(global.__dirname+'/assets/mem.json') ).recents;
-			// var jObj = JSON.parse( require('fs').readFileSync('assets\\mem.json') ).recents;
-			var inst_count = [];
-			var inst_paths = [];
-			var inst_name = [];
-			for (var name in jObj) {
-				if (jObj.hasOwnProperty(name)) {
-					inst_count.push( jObj[name].count );
-					inst_paths.push( jObj[name].path );
-					inst_name.push(name);
-				}
-			}
-			var pathSorted = selectionSort(inst_count, inst_paths);
-			var nameSorted = selectionSort(inst_count, inst_name);
-			for (var i = pathSorted.length - 1; i >= 0; i--) {
-				var fs = require('fs');
-				try {
-				    stats = fs.lstatSync(pathSorted[i]);
-				    if (stats.isDirectory()) {
-				        // $('#recentsListSide ul').append( $('<a href="#" onclick="setCurrentWS(\''+pathSorted[i].split('\\').join('/')+'\')"><li>'+nameSorted[i]+'</li></a>') );
-				        $('#recentsListSide ul').append( 
-				        	$('<a href="#" onclick="goto_continue();setCurrentWS(\''+nameSorted[i]+'\')"><li>'+nameSorted[i]+'</li></a>') 
-				        	);
-				    }
-				}
-				catch (e) {
-				}				
-			}
-
-		</script>
 	
 	</body>
 </html>

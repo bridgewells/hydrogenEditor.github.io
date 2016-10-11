@@ -390,7 +390,12 @@ function createDeleteItemPanel(withContent){
 	$('#delText').text('Are you sure you want to delete '+filename+'?');
 
 	$('#yesDelete').on('click',function(){
-		require('fs').unlinkSync(withContent);
+		if (checkTypePath(file) == 'directory') {
+			deleteFolderRecursive(file);
+		}
+		else{
+			require('fs').unlinkSync(withContent);
+		}
 		changeStatus('Deleted '+withContent+'!',1);
 		var struct = dirTree(rootFolder + wsFolder + "/" + workingFolder);
 		var treeX = genTreeJSON(struct);

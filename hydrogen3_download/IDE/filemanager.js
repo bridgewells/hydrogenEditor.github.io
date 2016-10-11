@@ -65,11 +65,16 @@ function createProject(name){
 
 function setupDirectory(){
 	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder);
-	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components");
+	createFolderUser("Components");
 	// fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments");
-	fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets");
+	// fs.mkdirSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets");
 	// fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"index.html", 'w'));
-	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets/style.css", 'w'));
+	fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"style.css", 'w'));
+}
+
+function createFolderUser(folderName,folderRoot){
+	folderRoot = (folderRoot || rootFolder + wsFolder+"/"+ workingFolder);
+	try{ fs.mkdirSync(folderRoot + "/" + folderName) } catch(v) {}
 }
 
 function setupTree(){
@@ -102,9 +107,16 @@ function setupTree(){
 function saveAllUnsaved(){
 	eventManager.triggerEvent('save');
 	$.each(editSessions, function(k, v) {
-    		if (v != undefined) fs.writeFileSync( k , v.getDocument().$lines.join("\n") );	
+			if (v != undefined) fs.writeFileSync( k , v.getDocument().$lines.join("\n") );	
 	});
 }
+
+function getFilesInFolder(fpath){
+	var filesHere = require("fs").readdirSync(fpath);
+	return filesHere;
+}
+
+// getFilesInFolder(rootFolder + wsFolder);
 
 function buildMode(path){
 	if (getFileExtension(path).toLowerCase() == "js"){
@@ -131,26 +143,26 @@ function buildMode(path){
 }
 
 function getFileExtension(url) {
-    "use strict";
-    if (url === null) {
-        return "";
-    }
-    var index = url.lastIndexOf("/");
-    if (index !== -1) {
-        url = url.substring(index + 1); // Keep path without its segments
-    }
-    index = url.indexOf("?");
-    if (index !== -1) {
-        url = url.substring(0, index); // Remove query
-    }
-    index = url.indexOf("#");
-    if (index !== -1) {
-        url = url.substring(0, index); // Remove fragment
-    }
-    index = url.lastIndexOf(".");
-    return index !== -1
-        ? url.substring(index + 1) // Only keep file extension
-        : ""; // No extension found
+	"use strict";
+	if (url === null) {
+		return "";
+	}
+	var index = url.lastIndexOf("/");
+	if (index !== -1) {
+		url = url.substring(index + 1); // Keep path without its segments
+	}
+	index = url.indexOf("?");
+	if (index !== -1) {
+		url = url.substring(0, index); // Remove query
+	}
+	index = url.indexOf("#");
+	if (index !== -1) {
+		url = url.substring(0, index); // Remove fragment
+	}
+	index = url.lastIndexOf(".");
+	return index !== -1
+		? url.substring(index + 1) // Only keep file extension
+		: ""; // No extension found
 }
 
 function checkTypePath(path){
@@ -158,13 +170,13 @@ function checkTypePath(path){
 	var theType = "";
 	console.log("checking " + path + " . . .");
 	try {
-	    var stats = fs.lstatSync(path);
-	    if (stats.isDirectory()) theType = "directory";
-	    if (stats.isFile()) theType = "file";
+		var stats = fs.lstatSync(path);
+		if (stats.isDirectory()) theType = "directory";
+		if (stats.isFile()) theType = "file";
 	}
 	catch (e) {
 		console.log(e);
-	    theType = "unknown";
+		theType = "unknown";
 	}
 	return theType;
 }
@@ -177,24 +189,24 @@ function genTreeJSON(struct){
 function dirTree(filename) {
 	var fs = require('fs');
 	var path = require('path');
-    var stats = fs.lstatSync(filename),
-        info = {
-            // path: filename,
-            name: path.basename(filename)
-        };
+	var stats = fs.lstatSync(filename),
+		info = {
+			// path: filename,
+			name: path.basename(filename)
+		};
 
-    if (stats.isDirectory()) {
-        // info.type = "folder";
-        info.children = fs.readdirSync(filename).map(function(child) {
-            return dirTree(filename + '/' + child);
-        });
-    } else {
-        // Assuming it's a file. In real life it could be a symlink or
-        // something else!
-        // info.type = "file";
-    }
+	if (stats.isDirectory()) {
+		// info.type = "folder";
+		info.children = fs.readdirSync(filename).map(function(child) {
+			return dirTree(filename + '/' + child);
+		});
+	} else {
+		// Assuming it's a file. In real life it could be a symlink or
+		// something else!
+		// info.type = "file";
+	}
 
-    return info;
+	return info;
 }
 
 function buildPathFromTree(data){
@@ -225,6 +237,12 @@ function generateUKey(){
 function createWSItem(name,ftype,withStuff) {
 	console.log("Creating "+ ftype + " named " + name);
 	changeStatus("Created "+ ftype + " named " + name, 3);
+	var selectedPath = "";
+	try{
+		selectedPath = buildPathFromTree( $('#tree').treeview('getSelected')[0] ).direct;
+	}catch(v){
+		selectedPath = rootFolder + wsFolder+"/"+ workingFolder;
+	}
 	if (ftype == "Components"){
 		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Components" + "/" + name +".cdml", 'w'));
 		var c = "\n\nnew ComponentInterface('web-component',{\n\tname:'"+name+".cdml',\n\tstyles:[],\n\tscripts:[],\n\torder:'defer'\n});";
@@ -240,33 +258,41 @@ function createWSItem(name,ftype,withStuff) {
 		var c2 = "<segment id='i_"+name+"'>\n\t\n</segment>";
 		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments" + "/" + name +".sdml",c2);	
 	}
+	else if (ftype == "Folder"){
+		if (selectedPath == rootFolder + wsFolder+"/"+ workingFolder){
+			createFolderUser(name);
+		}
+		else{
+			createFolderUser(name,selectedPath);
+		}
+	}
 	else if (ftype == "Class" || ftype == "JS File"){
-		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets" + "/" + name +".js", 'w'));
+		fs.closeSync(fs.openSync(selectedPath + "/" + name +".js", 'w'));
 		if (withStuff != undefined) {
-			fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets" + "/" + name +".js",createItemPanelContent);
+			fs.writeFileSync(selectedPath+ "/" + name +".js",createItemPanelContent);
 		}
 		else{
 			var c = "class "+name+"{\n\tconstructor(){\n\t\n\t}\n}";
-			fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets" + "/" + name +".js",c);			
+			fs.writeFileSync(selectedPath + "/" + name +".js",c);			
 		}
 	}
 	else if (ftype == "HTML File"){
-		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" + name +".html", 'w'));
+		fs.closeSync(fs.openSync(selectedPath+ "/" + name +".html", 'w'));
 		if (withStuff != undefined){
-			fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" + name +".html",createItemPanelContent);
+			fs.writeFileSync(selectedPath + "/" + name +".html",createItemPanelContent);
 		}
 		else{
 			var c = "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>"+name+"</title>\n\t</head>\n\t<body>\n\t\n\t</body>\n</html>";
-			fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" + name +".html",c);
+			fs.writeFileSync(selectedPath+ "/" + name +".html",c);
 		}
 	}
 	else if (ftype == "StyleSheet"){
-		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets" + "/" + name +".css", 'w'));
-		if (withStuff != undefined) fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Assets" + "/" + name +".css",createItemPanelContent);
+		fs.closeSync(fs.openSync(selectedPath + "/" + name +".css", 'w'));
+		if (withStuff != undefined) fs.writeFileSync(selectedPath + "/" + name +".css",createItemPanelContent);
 	}
 	else{
-		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/" + name , 'w'));
-		if (withStuff != undefined) fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" + name ,createItemPanelContent);
+		fs.closeSync(fs.openSync(selectedPath + "/" + name , 'w'));
+		if (withStuff != undefined) fs.writeFileSync(selectedPath+ "/" + name ,createItemPanelContent);
 	}
 	$('#panel_Create_new').remove();
 	refreshTree();
@@ -274,6 +300,21 @@ function createWSItem(name,ftype,withStuff) {
 	// ace.edit("editor").getSession().setValue("");
 	setupTree();
 }
+
+var fs = require('fs');
+function deleteFolderRecursive(path) {
+	if( checkTypePath(path) == 'directory'  && path != "" && path != "/") {
+		fs.readdirSync(path).forEach(function(file,index){
+			var curPath = path + "/" + file;
+			if(fs.lstatSync(curPath).isDirectory()) { // recurse
+				deleteFolderRecursive(curPath);
+			} else { // delete file
+				fs.unlinkSync(curPath);
+			}
+		});
+		fs.rmdirSync(path);
+	}
+};
 
 function refreshTree(){
 	var struct = dirTree(rootFolder + wsFolder + "/" + workingFolder);
