@@ -387,7 +387,7 @@ function createDeleteItemPanel(withContent){
 	var file = withContent;
 	var filename = path.parse(file).base;
 
-	$('#delText').text('Are you sure you want to delete '+filename+'?');
+	$('#delText').text('Are you sure you want to delete '+filename+'? \n(This cannot be undone!)');
 
 	$('#yesDelete').on('click',function(){
 		if (checkTypePath(file) == 'directory') {
