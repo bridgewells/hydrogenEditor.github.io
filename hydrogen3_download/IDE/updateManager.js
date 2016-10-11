@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.34.89.82',
+	version: '3.41.53.94',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -52,7 +52,7 @@ function analyseOnlineVersion(versionContent){
 	if (vl.major == vr.major){
 		if (vl.minor == vr.minor){
 			if (vl.release == vr.release){
-				if (vl.build < vl.build){
+				if (vl.build < vr.build){
 					gotUpdate = true;
 				}
 			}
