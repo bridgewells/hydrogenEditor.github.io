@@ -46,18 +46,24 @@
 					<ul>
 						<a onclick="goto_create()"><li>New Project</li></a>
 						<a href="#"><li>Open</li></a>
+						<hr>
 						<a href="#" onclick="getAndInstallUpdates()"><li id="xvers">About</li></a>
+						<a href="#" onclick="max_h();showLicense()"><li>License</li></a>
 						<a href="#" onclick="require('nw.gui').Window.get().close()"><li>Close</li></a>
 					</ul>
 				</div>
 					
 			</div>
-			
+			<div class="cont">https://hydrogenEditor.github.io/</div>
+			<div class="cop" onclick="max_h();showLicense()">Copyright 2016 darcectech</div>
 			<div class="sep"></div>
 			<div class="right" id="recentsListSide">
 				<ul></ul>
 			</div>
 		</div>
+		<div class="center license">
+				<button class="btn_license" onclick="hideLicense()">CLOSE</button>
+			</div>
 	
 	</body>
 </html>

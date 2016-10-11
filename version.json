@@ -1,8 +1,8 @@
 {
-	"version" :"3.41.53.97" ,
+	"version" :"3.41.54.99" ,
 	"channel" :"beta" ,
 	"status" :"stable" ,
-	"important" :"false" ,
+	"important" :"true" ,
 	"target":["win32","win64","darwin"],
 	"details" :" " ,
 	"changes" :["speed and stability improvements","updater target now checked","Auto updater now active"]

@@ -100,6 +100,16 @@ function hideStatus(){
 	$('#bottomBar').html("");
 }
 
+function showLicense(){
+	$('.start-page-base').load('http://hydrogenEditor.github.io/LICENSE.md')
+	$('.start-page-base').css({"overflow-y":"auto"});
+	$('.license').show();
+}
+
+function hideLicense(){
+	location.reload();
+}
+
 function hideSearchResults(){
 	$("#searchResults").empty();
 	$('#searchBar').val("");

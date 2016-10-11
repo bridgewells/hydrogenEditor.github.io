@@ -13,6 +13,20 @@
 	color:deepskyblue;
 }
 
+.cont{
+	position: absolute;
+	bottom: 5px;
+	left: 10px;
+	color: rgba(28,28,28,0.2);
+}
+
+.cop{
+	position: absolute;
+	bottom: 5px;
+	right: 10px;
+	color: rgba(28,28,28,0.2);
+}
+
 .delBtn{
 	padding:15px; 
 	border-radius: 5px; 
@@ -801,6 +815,10 @@ font-size: 1vw;
 	background-color: firebrick;
 }
 
+.btn_license{
+
+}
+
 .start-page-base{
 	position: absolute;
 	background-color: white;
@@ -812,6 +830,30 @@ font-size: 1vw;
 	margin: -250px 0 0 -400px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	/* backdrop-filter: blur(15px); */
+}
+
+.center.license{
+	width: 100%;
+	text-align: center;
+	position: fixed;
+	bottom: 50px;
+}
+
+.center.license button{
+	border-radius: 5px;
+	background: deepskyblue;
+	color:white;
+	padding: 5px;
+	border:none;
+}
+
+.options ul hr{
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid lightgray;
+	margin-top: 0px;
+	margin-bottom: 5px;
 }
 
 .start-page-base .left{

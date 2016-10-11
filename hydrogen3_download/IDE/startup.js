@@ -5,6 +5,10 @@ function getFilesInFolder(fpath){
 	return filesHere;
 }
 
+if (rootFolder == undefined){
+	getAndInstallUpdates();
+}
+
 var pathSorted = getFilesInFolder(rootFolder + wsFolder)
 for (var i = pathSorted.length - 1; i >= 0; i--) {
 	var fs = require('fs');
@@ -21,6 +25,8 @@ for (var i = pathSorted.length - 1; i >= 0; i--) {
 }
 
 var timer = null;
+
+$('.license').hide();
 
 $('#recentsListSide ul').on('mousedown','a',function(){
 	var s = $(this).find('li')[0].innerHTML;
