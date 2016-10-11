@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.53.94',
+	version: '3.41.53.95',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -11,6 +11,7 @@ let hydrogenInformationPack = {
 		"filemanager.js",
 		"index.html",
 		"package.json",
+		"startup.js",
 		"pluginManager.js",
 		"shortcutManager.js",
 		"random.jpg",
