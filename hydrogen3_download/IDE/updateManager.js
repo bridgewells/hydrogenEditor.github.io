@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.67.09',
+	version: '3.41.67.11',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -98,6 +98,7 @@ function getAndInstallUpdates(){
 	}
 	$('.start-page-base .left').css({"width":"100%"});
 	$('.start-page-base .right').hide();
+	$('.start-page-base .sep').hide();
 	$('.start-page-base .left .banner').css({"margin-top":"120px"});
 	$('.prog').addClass('shown');
 	$('.options ul').html("");

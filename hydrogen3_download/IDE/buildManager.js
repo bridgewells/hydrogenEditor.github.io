@@ -27,37 +27,37 @@ let buildManager = {
 		var files = fs.readdirSync(rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder);
 		files.filter(function(file) { return file.substr(-5) === '.html'; }).forEach(function(file) { buildManager.files['html'].push(file)  });
 
-		files = fs.readdirSync(rootFolder + wsFolder + "/" + workingFolder + "/Components");
+		try{
+			files = fs.readdirSync(rootFolder + wsFolder + "/" + workingFolder + "/Components");
+		}
+		catch(sep){
+			files = [];
+		}
+		
 		files.filter(function(file) { return file.substr(-5) === '.cdml'; }).forEach(function(file) { buildManager.files['cdml'].push(file)  });
 		
-			console.log(buildManager.files['html'].length);
-			for (var i = 0; i < buildManager.files['html'].length; i++) {
-				var indexPath = rootFolder + wsFolder + "/" + workingFolder + "/" +buildManager.files['html'][i];
-				var indexFinalPath = rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/" + buildManager.files['html'][i];
-				var indexContent = fs.readFileSync(indexPath,'utf8');
+		console.log(buildManager.files['html'].length);
+		for (var i = 0; i < buildManager.files['html'].length; i++) {
+			var indexPath = rootFolder + wsFolder + "/" + workingFolder + "/" +buildManager.files['html'][i];
+			var indexFinalPath = rootFolder + wsFolder + "/" + finalFolder + "/" + workingFolder + "/" + buildManager.files['html'][i];
+			var indexContent = fs.readFileSync(indexPath,'utf8');
+			
+			for (var x = 0; x < buildManager.components.length; x++) {
+				var componentFilePath = rootFolder + wsFolder + "/" + workingFolder + "/Components/" + buildManager.components[x].iname;
+				var componentContent = fs.readFileSync(componentFilePath,'utf8');
+				var componentDOM = $.parseHTML(componentContent);
+				var componentTagID = componentDOM[0].firstChild.parentElement.id;
 				
-				for (var x = 0; x < buildManager.components.length; x++) {
-					var componentFilePath = rootFolder + wsFolder + "/" + workingFolder + "/Components/" + buildManager.components[x].iname;
-					var componentContent = fs.readFileSync(componentFilePath,'utf8');
-					var componentDOM = $.parseHTML(componentContent);
-					var componentTagID = componentDOM[0].firstChild.parentElement.id;
-					
-					console.log('<'+componentTagID+'></'+componentTagID+'>');
-					componentContent = componentContent.replace( new RegExp("\n", "g") , "\n\t\t" );
+				console.log('<'+componentTagID+'></'+componentTagID+'>');
+				componentContent = componentContent.replace( new RegExp("\n", "g") , "\n\t\t" );
 
-					console.log(componentContent);
-					indexContent = indexContent.replace(new RegExp( '<'+componentTagID+'></'+componentTagID+'>' , 'g'), componentContent);
-				}
-
-				console.log('222:'+indexContent);
-				fs.writeFileSync(indexFinalPath,indexContent);
+				console.log(componentContent);
+				indexContent = indexContent.replace(new RegExp( '<'+componentTagID+'></'+componentTagID+'>' , 'g'), componentContent);
 			}
 
-		// TODO
-		// Loop through stored components and:
-		// create script tags and style tags to place inside all html files found above
-		// use the component information to copy component layouts into all html files which reference the component
-		// Make build tool accessible by save function and run function. Make build button repace stop button
+			console.log('222:'+indexContent);
+			fs.writeFileSync(indexFinalPath,indexContent);
+		}
 
 		changeStatus("BUILD COMPLETED SUCCESSFULLY!",5);
 		return true;
