@@ -5,6 +5,28 @@
 	-webkit-transition: .1s;
 }
 
+.prog{
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 0px;
+	background: gainsboro;
+	transition: height .3s;
+}
+
+.prog.shown{
+	height: 5px;
+	transition: height .3s;
+}
+
+.prog .bar{
+	position: relative;
+	height: 100%;
+	width: 0%;
+	background: deepskyblue;
+}
+
 .node-selected .icon.glyphicon{
 	color:white !important;
 }

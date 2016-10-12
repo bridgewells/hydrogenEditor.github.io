@@ -97,10 +97,12 @@ function getAndInstallUpdates(){
 		console.log("packs folder already exists");
 	}
 	$("*").css({"filter":"blur(2px)"});
+	$(".prog,.bar").css({"filter":"blur(0px)"});
+	$('.prog').addClass('shown');
 	startPoll();
 	eventManager.triggerEvent('updating','download','downloading updates...');
-	hydrogenInformationPack.jobCounter = hydrogenInformationPack.updatables.length-1;
 	for (var i = 0; i < hydrogenInformationPack.updatables.length; i++) {
+		hydrogenInformationPack.jobCounter +=1;
 		download(hydrogenInformationPack.updatables[i]);
 	}
 }
@@ -115,16 +117,21 @@ function explodeVersionNumbers(vn){
 	}
 }
 
+function updateProgress(){
+	var progPercentage = (hydrogenInformationPack.jobCounter/hydrogenInformationPack.updatables.length) * 100;
+	$('.prog .bar').css({'width':String(progPercentage)+'%'});
+}
+
 function download(filename){
 	var http = require('https');
 	var fs = require('fs');
-
 	var file = fs.createWriteStream("./"+filename);
 	var request = http.get("https://hydrogeneditor.github.io/hydrogen3_download/IDE/"+filename, function(response) {
 	  response.pipe(file);
 	  hydrogenInformationPack.jobCounter -= 1;
 	  eventManager.triggerEvent('updating','installing',file);
-	  if (hydrogenInformationPack.jobCounter <= 0){
+	updateProgress();
+	  if (hydrogenInformationPack.jobCounter >= hydrogenInformationPack.updatables.length-1){
 	  	endPoll();
 	  	eventManager.triggerEvent('updating','completed','Updates were installed successfully');
 	  }
