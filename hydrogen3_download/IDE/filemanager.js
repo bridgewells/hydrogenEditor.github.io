@@ -105,7 +105,7 @@ function setupTree(){
 }
 
 function goCustom(){
-	$(document.body).append( $('<input type="text" id="prof" nwdirectory>') );
+	$(document.body).append( $('<input type="file" style="display:none;" id="prof" nwdirectory>') );
 	$('#prof').unbind('change');
 	$('#prof').change(function(evt) {
 		var xfpath = $(this).val();
