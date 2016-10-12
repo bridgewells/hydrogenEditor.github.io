@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.66.04',
+	version: '3.41.67.05',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -96,13 +96,14 @@ function getAndInstallUpdates(){
 	catch(xxs){
 		console.log("packs folder already exists");
 	}
+	$('.start-page-base .left').css({"width":"100%"});
+	$('.start-page-base .left .banner').css({"margin-top":"120px"});
 	$('.prog').addClass('shown');
 	$('.options ul').html("");
 	startPoll();
 	hydrogenInformationPack.jobCounter = 0;
 	eventManager.triggerEvent('updating','download','downloading updates...');
 	for (var i = 0; i < hydrogenInformationPack.updatables.length; i++) {
-		hydrogenInformationPack.jobCounter +=1;
 		download(hydrogenInformationPack.updatables[i]);
 	}
 }
@@ -119,6 +120,7 @@ function explodeVersionNumbers(vn){
 
 function updateProgress(){
 	var progPercentage = (hydrogenInformationPack.jobCounter/hydrogenInformationPack.updatables.length) * 100;
+	console.log(progPercentage);
 	$('.prog .bar').css({'width':String(progPercentage)+'%'});
 }
 
@@ -127,14 +129,14 @@ function download(filename){
 	var fs = require('fs');
 	var file = fs.createWriteStream("./"+filename);
 	var request = http.get("https://hydrogeneditor.github.io/hydrogen3_download/IDE/"+filename, function(response) {
-	  response.pipe(file);
-	  hydrogenInformationPack.jobCounter -= 1;
-	  eventManager.triggerEvent('updating','installing',file);
-	updateProgress();
-	  if (hydrogenInformationPack.jobCounter == hydrogenInformationPack.updatables.length){
-	  	endPoll();
-	  	eventManager.triggerEvent('updating','completed','Updates were installed successfully');
-	  }
+		response.pipe(file);
+		hydrogenInformationPack.jobCounter +=1;
+		updateProgress();
+		eventManager.triggerEvent('updating','installing',file);
+		if (hydrogenInformationPack.jobCounter == hydrogenInformationPack.updatables.length){
+			endPoll();
+			eventManager.triggerEvent('updating','completed','Updates were installed successfully');
+		}
 	});
 }
 
@@ -148,13 +150,15 @@ function startPoll(){
 
 function endPoll(){
 	clearInterval(hydrogenInformationPack.poll);
-	for (var i = 0; i < hydrogenInformationPack.pollers.length; i++) {
-		hydrogenInformationPack.pollers[i]( hydrogenInformationPack.jobCounter )
-	}
-	hydrogenInformationPack.pollers = [];
-	alert("Updates installed! Performing quick reload. . .");
-	location = 'index.html';
-	location.reload();
+	setTimeout(function(){
+		for (var i = 0; i < hydrogenInformationPack.pollers.length; i++) {
+			hydrogenInformationPack.pollers[i]( hydrogenInformationPack.jobCounter )
+		}
+		hydrogenInformationPack.pollers = [];
+		alert("Updates installed! Performing quick reload. . .");
+		location = 'index.html';
+		location.reload();
+	},1000);
 }
 
 function pollStatus(fn){
@@ -163,6 +167,6 @@ function pollStatus(fn){
 
 eventManager.onEvent('updating',function(s){
 	console.log(s);
-})
+});
 
 $('#xvers').html("Version: "+hydrogenInformationPack.version);
