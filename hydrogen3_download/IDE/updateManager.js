@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.68.44',
+	version: '3.41.68.45',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -38,6 +38,8 @@ let hydrogenInformationPack = {
 
 eventManager.triggerEvent('updating','checking','Checking server for latest updates...');
 
+hideUI();
+
 $( "<p></p>" ).load("https://hydrogenEditor.github.io/version.json",function(){
 	analyseOnlineVersion( JSON.parse( $(this).html() ) );
 });
@@ -72,6 +74,9 @@ function analyseOnlineVersion(versionContent){
 	if (gotUpdate){
 		askUserUpdate(versionContent.important,versionContent)
 	}
+	else{
+		showUI();
+	}
 }
 
 function askUserUpdate(important,info){
@@ -96,18 +101,31 @@ function getAndInstallUpdates(){
 	catch(xxs){
 		console.log("packs folder already exists");
 	}
-	$('.start-page-base .left').css({"width":"100%"});
-	$('.start-page-base .right').hide();
-	$('.start-page-base .sep').hide();
-	$('.start-page-base .left .banner').css({"margin-top":"120px"});
-	$('.prog').addClass('shown');
-	$('.options ul').html("");
+	hideUI();
 	startPoll();
 	hydrogenInformationPack.jobCounter = 0;
 	eventManager.triggerEvent('updating','download','downloading updates...');
 	for (var i = 0; i < hydrogenInformationPack.updatables.length; i++) {
 		download(hydrogenInformationPack.updatables[i]);
 	}
+}
+
+function hideUI(){
+	$('.start-page-base .left').css({"width":"100%"});
+	$('.start-page-base .right').hide();
+	$('.start-page-base .sep').hide();
+	$('.start-page-base .left .banner').css({"margin-top":"120px"});
+	$('.prog').addClass('shown');
+	$('.options ul').hide();
+}
+
+function showUI(){
+	$('.start-page-base .left').css({"width":"499px"});
+	$('.start-page-base .right').show();
+	$('.start-page-base .sep').show();
+	$('.start-page-base .left .banner').css({"margin-top":"0px"});
+	$('.prog').removeClass('shown');
+	$('.options ul').show();
 }
 
 function explodeVersionNumbers(vn){
