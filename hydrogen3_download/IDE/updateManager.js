@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.64.99',
+	version: '3.41.66.03',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -96,9 +96,8 @@ function getAndInstallUpdates(){
 	catch(xxs){
 		console.log("packs folder already exists");
 	}
-	$("*").css({"filter":"blur(2px)"});
-	$(".prog,.bar").css({"filter":"blur(0px)"});
 	$('.prog').addClass('shown');
+	$('.options ul').html("");
 	startPoll();
 	eventManager.triggerEvent('updating','download','downloading updates...');
 	for (var i = 0; i < hydrogenInformationPack.updatables.length; i++) {
@@ -131,7 +130,7 @@ function download(filename){
 	  hydrogenInformationPack.jobCounter -= 1;
 	  eventManager.triggerEvent('updating','installing',file);
 	updateProgress();
-	  if (hydrogenInformationPack.jobCounter >= hydrogenInformationPack.updatables.length-1){
+	  if (hydrogenInformationPack.jobCounter > hydrogenInformationPack.updatables.length-1){
 	  	endPoll();
 	  	eventManager.triggerEvent('updating','completed','Updates were installed successfully');
 	  }
