@@ -240,6 +240,9 @@ function createWSItem(name,ftype,withStuff) {
 	var selectedPath = "";
 	try{
 		selectedPath = buildPathFromTree( $('#tree').treeview('getSelected')[0] ).direct;
+		if (checkTypePath(selectedPath) != 'directory'){
+			selectedPath = rootFolder + wsFolder+"/"+ workingFolder;
+		}
 	}catch(v){
 		selectedPath = rootFolder + wsFolder+"/"+ workingFolder;
 	}
