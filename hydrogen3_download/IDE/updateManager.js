@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.54.99',
+	version: '3.41.64.99',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -96,6 +96,7 @@ function getAndInstallUpdates(){
 	catch(xxs){
 		console.log("packs folder already exists");
 	}
+	$("*").css({"filter":"blur(2px)"});
 	startPoll();
 	eventManager.triggerEvent('updating','download','downloading updates...');
 	hydrogenInformationPack.jobCounter = hydrogenInformationPack.updatables.length-1;

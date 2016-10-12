@@ -357,6 +357,9 @@ function saveEditorContent(){
 	if (liveEditorOpened){
 		clearEditables();
 		var html_pretty = require('js-beautify').html;
+		$(".liveEditor").contents().find("html").find("style[data-href]").replaceWith(function(){
+			return '<link rel="stylesheet" href="'+$(this).data('href')+'"></link>';
+		});
 		var documentContent =  html_pretty( "<!DOCTYPE html><html>" + $(".liveEditor").contents().find("html").html() + "</html>" , { 
 			indent_size: 4,
 			indent_char:" ",
