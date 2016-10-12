@@ -1,6 +1,6 @@
 
 let hydrogenInformationPack = {
-	version: '3.41.68.45',
+	version: '3.41.68.46',
 	channel:'beta',
 	status:'stable',
 	platform: require("os").platform(),
@@ -189,4 +189,5 @@ eventManager.onEvent('updating',function(s){
 	console.log(s);
 });
 
-$('#xvers').html("Version: "+hydrogenInformationPack.version);
+$('#xvers').html("Force Update");
+$('.cont').html("Version: "+hydrogenInformationPack.version);

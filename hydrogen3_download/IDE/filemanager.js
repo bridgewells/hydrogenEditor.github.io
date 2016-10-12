@@ -104,6 +104,57 @@ function setupTree(){
 	$('#tree').treeview('expandAll');
 }
 
+function goCustom(){
+	$(document.body).append( $('<input type="text" id="prof" nwdirectory>') );
+	$('#prof').unbind('change');
+	$('#prof').change(function(evt) {
+		var xfpath = $(this).val();
+		var xfname = path.basename(xfpath);
+		copyFolderRecursiveSync(xfpath,rootFolder+wsFolder);
+		goto_continue();
+		setCurrentWS(xfname);
+	});
+
+    	$('#prof')[0].click(); 
+}
+
+function copyFileSync( source, target ) {
+
+	var targetFile = target;
+
+	//if target is a directory a new file with the same name will be created
+	if ( fs.existsSync( target ) ) {
+		if ( fs.lstatSync( target ).isDirectory() ) {
+			targetFile = path.join( target, path.basename( source ) );
+		}
+	}
+
+	fs.writeFileSync(targetFile, fs.readFileSync(source));
+}
+
+function copyFolderRecursiveSync( source, target ) {
+	var files = [];
+
+	//check if folder needs to be created or integrated
+	var targetFolder = path.join( target, path.basename( source ) );
+	if ( !fs.existsSync( targetFolder ) ) {
+		fs.mkdirSync( targetFolder );
+	}
+
+	//copy
+	if ( fs.lstatSync( source ).isDirectory() ) {
+		files = fs.readdirSync( source );
+		files.forEach( function ( file ) {
+			var curSource = path.join( source, file );
+			if ( fs.lstatSync( curSource ).isDirectory() ) {
+				copyFolderRecursiveSync( curSource, targetFolder );
+			} else {
+				copyFileSync( curSource, targetFolder );
+			}
+		} );
+	}
+}
+
 function saveAllUnsaved(){
 	eventManager.triggerEvent('save');
 	$.each(editSessions, function(k, v) {
