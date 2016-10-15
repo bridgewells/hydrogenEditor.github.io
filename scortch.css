@@ -119,7 +119,18 @@ body{
 	width: 20%;
 }
 
-.atfull{
+video.atfull{
+	width: 70%;
+	margin-bottom: -5%;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	margin-top: 5%;
+	-webkit-box-shadow: -1px 19px 56px -4px rgba(0,0,0,0.79);
+	-moz-box-shadow: -1px 19px 56px -4px rgba(0,0,0,0.79);
+	box-shadow: -1px 19px 56px -4px rgba(0,0,0,0.79);
+}
+
+.atfull img{
 	width: 80%;
 	margin-bottom: -5%;
 }
