@@ -1,12 +1,63 @@
 "use strict";
 
 var finalFolder = "release"
+var shell = require("shelljs");
+var isPrepped = false;
 
 let buildManager = {
 	components:[],
 	files:{},
 	buildTemp:function(){
 		//use scripts and styles for testing
+	},
+	prepApp:function () {
+		var buildInfoPath = rootFolder + wsFolder+"/"+ workingFolder + "/build.json";
+		var buildInfo = JSON.parse(fs.readFileSync(buildInfoPath,'utf8'));
+		var abp = '';
+
+		shell.cd(rootFolder + wsFolder+"/"+ workingFolder);
+		abp = shell.exec("cordova create "+ rootFolder + wsFolder+"/"+ workingFolder+"/"+buildInfo.name+" "+buildInfo.access+" "+buildInfo.name,{silent:false,async:false}).output;
+		console.log(abp);
+		try{
+			copyFolderRecursiveSync(rootFolder + wsFolder + "/" + workingFolder, rootFolder + wsFolder + "/" + finalFolder + "/"+ buildInfo.name + "/www");
+			console.log('copied over large dir')
+		}
+		catch(bf){
+			changeStatusNegative('PRE-BUILDING APP FAILED!!',15);
+			isPrepped = false;
+			return false;
+		}
+
+		isPrepped = true;
+		return true;
+	},
+	buildApp:function(){
+		var outcome = false
+		var buildInfoPath = rootFolder + wsFolder+"/"+ workingFolder + "/build.json";
+		var buildInfo = JSON.parse(fs.readFileSync(buildInfoPath,'utf8'));
+
+		if (isPrepped == false) buildManager.prepApp();
+
+		shell.cd(buildInfo.name);
+
+		var perms = buildInfo.permissions;
+		for (var i = 0; i < perms.length; i++) {
+			shell.exec("cordova plugin add "+perms[i]+" --save ",{silent:false,async:false});
+		}
+
+		shell.exec("cordova platform add "+ buildInfo.platform + " --save",{silent:false,async:false});
+		shell.exec("cordova build "+ buildInfo.platform + " --verbose",{silent:false,async:false});
+		shell.exec("cordova run "+ buildInfo.platform,{silent:false,async:true});
+
+		shell.cd(path.dirname(nw.App.manifest.main).split("://")[1])
+
+		if (outcome == true){
+			changeStatus("BUILD COMPLETED SUCCESSFULLY!",5);
+		}
+		else{
+			changeStatusNegative('APP BUILDING FAILED!!!',5)
+		}
+		return outcome
 	},
 	buildCurrent:function(){
 		buildManager.components = [];
@@ -59,8 +110,13 @@ let buildManager = {
 			fs.writeFileSync(indexFinalPath,indexContent);
 		}
 
-		changeStatus("BUILD COMPLETED SUCCESSFULLY!",5);
-		return true;
+		if (checkTypePath(rootFolder + wsFolder+"/"+ workingFolder + "/build.json")=='file'){
+			return buildManager.buildApp()
+		}
+		else{
+			changeStatus("BUILD COMPLETED SUCCESSFULLY!",5);
+			return true;
+		}
 	}
 }
 

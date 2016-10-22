@@ -173,6 +173,9 @@ function buildMode(path){
 	if (getFileExtension(path).toLowerCase() == "js"){
 		return "ace/mode/javascript";
 	}
+	else if (getFileExtension(path).toLowerCase() == "json"){
+		return "ace/mode/json";
+	}
 	else if (getFileExtension(path).toLowerCase() == "html"){
 		return "ace/mode/html";
 	}
@@ -181,6 +184,9 @@ function buildMode(path){
 	}
 	else if (getFileExtension(path).toLowerCase() == "cdml"){
 		return "ace/mode/html";
+	}
+	else if (getFileExtension(path).toLowerCase() == "xml"){
+		return "ace/mode/xml";
 	}
 	else if (getFileExtension(path).toLowerCase() == "css"){
 		return "ace/mode/css";
@@ -311,6 +317,23 @@ function createWSItem(name,ftype,withStuff) {
 		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments" + "/" + name +".js",c);	
 		var c2 = "<segment id='i_"+name+"'>\n\t\n</segment>";
 		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/" +"Segments" + "/" + name +".sdml",c2);	
+	}
+	else if (ftype == "IOS App"){
+		fs.closeSync(fs.openSync(rootFolder + wsFolder+"/"+ workingFolder + "/build.json", 'w'));
+		var c = {
+			'name':name,
+			'access':'com.myCompany.'+name.replace(' ','_'),
+			'platform':'ios',
+			'version':'0.0.0.1',
+			'type':'hybrid',
+			'permissions':[
+				'cordova-plugin-device',
+				'phonegap-plugin-push',
+				'cordova-plugin-splashscreen',
+				'cordova-plugin-network-information'
+			]
+		}
+		fs.writeFileSync(rootFolder + wsFolder+"/"+ workingFolder + "/build.json",JSON.stringify(c, null, "\t"));
 	}
 	else if (ftype == "Folder"){
 		if (selectedPath == rootFolder + wsFolder+"/"+ workingFolder){
