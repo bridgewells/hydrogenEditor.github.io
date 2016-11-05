@@ -1,0 +1,24 @@
+{
+  "name": "hydrogen",
+  "main": "index.html",
+  "version": "3.0.0",
+  "js-flags": "--expose-gc",
+  "window": {
+    "icon": "dependencies/img/logoWhite.png",
+    "toolbar": true,
+    "frame": true,
+    "min_width":800,
+    "min_height":500
+  },
+  "chromium-args": "--enable-experimental-web-platform-features --enable-webrtc-hw-h264-encoding --enable-webrtc-hw-h264-decoding --enable-features=WebRTC-H264WithOpenH264FFmpeg",
+  "webview": {
+    "partitions": [
+      {
+        "name": "appSpace",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      }
+    ]
+  }
+}

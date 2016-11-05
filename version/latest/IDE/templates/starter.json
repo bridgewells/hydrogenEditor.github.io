@@ -1,0 +1,33 @@
+[
+	{
+		"text":"My Project",
+		"nodes": [
+			{
+				"text":"Components",
+				"tags":["directory"]
+			},
+			{
+				"text":"Segments",
+				"tags":["directory"]
+			},
+			{
+				"text":"Assets",
+				"tags":["directory"],
+				"nodes":[
+					{
+						"text":"style.css",
+						"tags":["file"]
+					}
+				]
+			},
+			{
+				"text":"index.html",
+				"tags":["file"]
+			},
+			{
+				"text":"creator.js",
+				"tags":["file"]
+			}
+		]
+	}	
+]
